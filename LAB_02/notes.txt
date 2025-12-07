@@ -1,0 +1,20 @@
+SQL Injection - Login Functionality
+
+END GOAL : Perform SQLi attack and log in as the administrator user.
+
+Probable SQL statement : 
+SELECT firstname FROM USERS WHERE username='administrator' and password = 'administrator'
+
+Analysis:
+If we put ' in the Username input field, it gives Internal Server Error(broke the application at the back-end) meaning its vulnerable to SQLi Attacks
+
+Exploit Payload
+---------------
+SELECT firstname FROM USERS WHERE username=''' 
+Explaination : The single quote(') in between the placeholder made the query search for an username which has value as '' and any value after that was considered as syntax error as it was unrecognised by the database and caused the Internal Server Error
+
+SELECT firstname FROM USERS WHERE username='administrator'--' and password='admin'
+Explaination : The (--) is considered as comment in SQL Language which will ignore the rest of the query(which will ignore the password as well) and will cause bypassing the password value requirement.
+
+
+
