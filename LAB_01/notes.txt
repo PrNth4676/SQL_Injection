@@ -1,0 +1,9 @@
+SQL Injection - Product Category Filter
+
+END GOAL : Display all Products both Released and Unreleased
+
+Probable SQL statement : 
+SELECT * FROM products WHERE category = 'Gifts' AND released = 1
+
+Analysis:
+SELECT * FROM products WHERE category = 'Pets' AND released = 1

