@@ -3,7 +3,7 @@ SQL Injection - Product Category Filter
 End Goal : Output the usernames and passwords in the users table and login as the administrator user.
 
 Analysis:
-1) Determine # of columns that the vulnerable query is missing
+1) Determine # of columns that the vulnerable query is using
 ' order by #-- where # changes iteratively
 Burpsuite Check : 2 columns are found
 

